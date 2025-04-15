@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diabetes Questionnaire</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container slide-up">
+        <h1>Diabetes Risk Assessment</h1>
+        
+        <form id="diabetesForm">
+            <fieldset>
+                <legend><i class="fas fa-heartbeat"></i> Medical Information</legend>
+                
+                <div class="form-group">
+                    <label>Pregnancies:</label>
+                    <input type="number" name="pregnancies" min="0" max="20" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Glucose (mg/dL):</label>
+                    <input type="number" name="glucose" min="50" max="300" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Blood Pressure (mmHg):</label>
+                    <input type="number" name="bloodPressure" min="30" max="200" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Skin Thickness (mm):</label>
+                    <input type="number" name="skinThickness" min="0" max="99" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Insulin (μU/mL):</label>
+                    <input type="number" name="insulin" min="0" max="300" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>BMI:</label>
+                    <input type="number" name="bmi" step="0.1" min="10" max="50" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Diabetes Pedigree:</label>
+                    <input type="number" name="diabetesPedigree" step="0.001" min="0" max="2.5" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Age:</label>
+                    <input type="number" name="age" min="1" max="120" required>
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                <legend><i class="fas fa-clipboard-list"></i> Symptoms (Past 3 Months)</legend>
+                
+                <div class="radio-group">
+                    <p>Frequent urination:</p>
+                    <label><input type="radio" name="frequentUrination" value="yes" required> Yes</label>
+                    <label><input type="radio" name="frequentUrination" value="no"> No</label>
+                </div>
+                
+                <div class="radio-group">
+                    <p>Thrist level:</p>
+                    <label><input type="radio" name="excessiveThirst" value="yes" required> Yes</label>
+                    <label><input type="radio" name="excessiveThirst" value="no"> No</label>
+                </div>
+                
+                <div class="radio-group">
+                    <p>Increased hunger:</p>
+                    <label><input type="radio" name="hunger" value="yes" required> Yes</label>
+                    <label><input type="radio" name="hunger" value="no"> No</label>
+                </div>
+                
+                <div class="radio-group">
+                    <p>Fatigue:</p>
+                    <label><input type="radio" name="fatigue" value="yes" required> Yes</label>
+                    <label><input type="radio" name="fatigue" value="no"> No</label>
+                </div>
+                
+                <div class="radio-group">
+                    <p>Blurred vision:</p>
+                    <label><input type="radio" name="blurredVision" value="yes" required> Yes</label>
+                    <label><input type="radio" name="blurredVision" value="no"> No</label>
+                </div>
+                
+                <div class="radio-group">
+                    <p>Slow healing:</p>
+                    <label><input type="radio" name="slowHealing" value="yes" required> Yes</label>
+                    <label><input type="radio" name="slowHealing" value="no"> No</label>
+                </div>
+                
+                <div class="radio-group">
+                    <p>Tingling/numbness:</p>
+                    <label><input type="radio" name="tinglingNumbness" value="yes" required> Yes</label>
+                    <label><input type="radio" name="tinglingNumbness" value="no"> No</label>
+                </div>
+            </fieldset>
+            
+            <button type="submit" class="submit-btn">
+                <span class="btn-text">Calculate Risk</span>
+            </button>
+        </form>
+
+        <div class="language-selector">
+            {% for code, name in languages.items() %}
+                <button class="language-btn" data-lang="{{ code }}">{{ name }}</button>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <script src="/static/script.js"></script>
+</body>
+</html>

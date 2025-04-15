@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diabetes Risk Assessment</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="welcome-card slide-up">
+            <h1><i class="fas fa-heartbeat"></i> Diabetes Risk Assessment</h1>
+            <p>This tool helps assess your diabetes risk using advanced machine learning</p>
+            <button onclick="window.location.href='/questionnaire?lang={{ lang }}'" class="start-btn">Start Assessment</button>
+            
+            <div class="language-selector">
+                {% for code, name in languages.items() %}
+                    <button class="language-btn" data-lang="{{ code }}">{{ name }}</button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>

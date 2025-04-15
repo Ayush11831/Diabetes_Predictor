@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="result-container">
+        <h1 class="slide-up">Your Diabetes Risk Assessment : </h1>
+        
+        <div class="results-grid">
+            <div class="result-card fade-in">
+                <h2><i class="fas fa-chart-line"></i> Your Risk Percentage</h2>
+                
+                <!-- Gauge Chart -->
+                <div class="gauge-container">
+                    <div class="gauge">
+                        <div class="gauge-body">
+                            <div class="gauge-fill"></div>
+                            <div class="gauge-cover">{{ "%.1f"|format(results.enhanced_risk) }}%</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add this below the gauge chart -->
+                <div class="risk-indicator">
+                    <div class="risk-dot" style="background: {{ 'var(--high-risk)' if results.enhanced_risk >= 60 else 'var(--medium-risk)' if results.enhanced_risk >= 30 else 'var(--low-risk)' }}"></div>
+                    <div class="risk-description">
+                        {{ "Consider immediate consultation" if results.enhanced_risk >= 60 else "Monitor regularly" if results.enhanced_risk >= 30 else "Low concern" }}
+                    </div>
+                </div>
+                
+                <!-- Risk Meter -->
+                <!-- Replace the risk meter section with this: -->
+                <div class="risk-meter">
+                    <div class="meter-container">
+                        <div class="meter-bar" style="width: {{ results.enhanced_risk }}%"></div>
+                        <div class="marker-value" style="left: {{ results.enhanced_risk }}%">{{ "%.1f"|format(results.enhanced_risk) }}%</div>
+                    </div>
+                    <div class="meter-labels">
+                        <span>0%</span>
+                        <span>30%</span>
+                        <span>60%</span>
+                        <span>100%</span>
+                    </div>
+                </div>
+                
+                <div class="symptoms-visual">
+                    <h3><i class="fas fa-notes-medical"></i> Your Symptoms</h3>
+                    <div class="symptoms-grid">
+                        {% for symptom in ['frequentUrination', 'excessiveThirst', 'hunger', 'fatigue', 'blurredVision', 'slowHealing', 'tinglingNumbness'] %}
+                        <div class="symptom-item {{ 'active' if results.user_data[symptom] == 'yes' }}">
+                            {{ symptom|replace('_', ' ')|title }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="risk-category">
+                    {% if results.enhanced_risk < 30 %}
+                        <p class="low-risk"><i class="fas fa-check-circle"></i> Low Risk</p>
+                    {% elif results.enhanced_risk < 60 %}
+                        <p class="medium-risk"><i class="fas fa-exclamation-triangle"></i> Moderate Risk</p>
+                    {% else %}
+                        <p class="high-risk"><i class="fas fa-exclamation-circle"></i> High Risk</p>
+                    {% endif %}
+                </div>
+                
+                <p>Symptoms reported: {{ results.symptom_count }}</p>
+            </div>
+            
+            <div class="result-card fade-in" id="a1234">
+                <h2><i class="fas fa-balance-scale"></i> Model Comparison</h2>
+                <canvas id="comparisonChart"></canvas>
+                <p><i class="fas fa-bolt"></i> Enhanced model accuracy: {{ "%.1f"|format(results.enhanced_accuracy) }}%</p>
+                <p><i class="fas fa-history"></i> Basic model accuracy: {{ "%.1f"|format(results.old_accuracy) }}%</p>
+                
+                <a href="/generate_pdf" class="pdf-btn">
+                    <i class="fas fa-file-pdf"></i> Download PDF Report
+                </a>
+            </div>
+            
+            <div class="result-card fade-in" id="a12345">
+                <h2><i class="fas fa-clipboard-check"></i> Recommendations</h2>
+                <div class="recommendations">
+                    {% if results.enhanced_risk < 30 %}
+                        <p><i class="fas fa-check-circle"></i> Maintain healthy lifestyle with balanced diet and regular exercise.</p>
+                        <p><i class="fas fa-check-circle"></i> Continue annual health check-ups.</p>
+                        <p><i class="fas fa-check-circle"></i> Monitor blood sugar levels occasionally.</p>
+                    {% elif results.enhanced_risk < 60 %}
+                        <p><i class="fas fa-user-mdlamation"></i> Consider consulting a doctor for further evaluation.</p>
+                        <p><i class="fas fa-user-mdlamation"></i> Monitor your blood sugar levels regularly.</p>
+                        <p><i class="fas fa-user-mdlamation"></i> Improve diet and increase physical activity.</p>
+                        <p><i class="fas fa-user-mdlamation"></i> Reduce sugar and processed food intake.</p>
+                    {% else %}
+                        <p><i class="fas fa-exclamation-triangle"></i> Please consult a healthcare professional immediately.</p>
+                        <p><i class="fas fa-exclamation-triangle"></i> Schedule a comprehensive diabetes screening.</p>
+                        <p><i class="fas fa-exclamation-triangle"></i> Implement immediate lifestyle changes.</p>
+                        <p><i class="fas fa-exclamation-triangle"></i> Follow medical advice for treatment plan.</p>
+                    {% endif %}
+                </div>
+                <button onclick="window.location.href='/questionnaire?lang={{ lang }}'" class="submit-btn">
+                    <i class="fas fa-redo"></i> New Assessment
+                </button>
+
+                <div class="health-tips">
+                    <h3><i class="fas fa-lightbulb"></i> Health Tips</h3>
+                    <div class="tips-carousel">
+                        <div class="tip active">
+                            <p><i class="fas fa-carrot"></i> Eat more fiber-rich foods like vegetables and whole grains</p>
+                        </div>
+                        <div class="tip">
+                            <p><i class="fas fa-walking"></i> Aim for at least 30 minutes of physical activity daily</p>
+                        </div>
+                        <div class="tip">
+                            <p><i class="fas fa-glass-whiskey"></i> Stay hydrated - drink plenty of water throughout the day</p>
+                        </div>
+                        <div class="tip">
+                            <p><i class="fas fa-utensils"></i> Reduce processed foods and added sugars in your diet</p>
+                        </div>
+                        <div class="tip">
+                            <p><i class="fas fa-bed"></i> Get 7-9 hours of quality sleep each night</p>
+                        </div>
+                    </div>
+                    <div class="tip-nav">
+                        <span class="tip-dot active" data-index="0"></span>
+                        <span class="tip-dot" data-index="1"></span>
+                        <span class="tip-dot" data-index="2"></span>
+                        <span class="tip-dot" data-index="3"></span>
+                        <span class="tip-dot" data-index="4"></span>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <div class="language-selector">
+            {% for code, name in languages.items() %}
+                <button class="language-btn" data-lang="{{ code }}">{{ name }}</button>
+            {% endfor %}
+        </div>
+    </div>
+
+    
+
+    <script>
+        // Model comparison chart
+        const ctx = document.getElementById('comparisonChart');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Enhanced Model', 'Basic Model'],
+                datasets: [{
+                    label: 'Risk Percentage',
+                    data: [{{ results.enhanced_risk }}, {{ results.old_risk }}],
+                    backgroundColor: [
+                        'rgba(74, 110, 224, 0.7)',
+                        'rgba(220, 53, 69, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(74, 110, 224, 1)',
+                        'rgba(220, 53, 69, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    <script src="/static/script.js"></script>
+</body>
+</html>
